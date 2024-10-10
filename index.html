@@ -1,6 +1,386 @@
-<!DOCTYPE html>
-<html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MGB's Website</title>
+    <style>
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0;
+            }
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #000000;
+            color: #FFFFFF;
+            margin: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        .wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            opacity: 1;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        .container {
+            text-align: center;
+            position: relative;
+            z-index: 1;
+            animation: fadeInUp 1s ease-out;
+            margin-bottom: 50px;
+        }
+
+        .btn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px 20px;
+            margin: 10px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s, transform 0.3s, opacity 0.5s ease-in-out;
+        }
+
+        .btn:hover {
+            transform: scale(1.1);
+        }
+
+        #exploreBtn {
+            background-color: #FF5722;
+            color: white;
+            animation: fadeInUp 2s ease-out;
+            animation-delay: 0.5s;
+            animation-fill-mode: both;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        .hidden-buttons .btn {
+            background-color: #2196F3;
+        }
+
+        .hidden-buttons .btn:nth-child(2) {
+            background-color: #FFC107;
+        }
+
+        .hidden-buttons .btn:nth-child(3) {
+            background-color: #9C27B0;
+        }
+
+        .hidden-buttons {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            opacity: 0;
+            transform: scale(0.8);
+            transition: opacity 0.5s, transform 0.5s;
+            max-height: 0;
+            overflow: hidden;
+        }
+
+        .hidden-buttons.show {
+            opacity: 1;
+            transform: scale(1);
+            max-height: 500px;
+        }
+
+        .hidden-buttons a {
+            text-decoration: none;
+        }
+
+        .background-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none; /* Ensures the background images do not interfere with other elements */
+        }
+
+        .background-image img {
+            position: absolute;
+            opacity: 0.2; /* Reduced opacity for a less bright effect */
+        }
+
+        .about-section {
+            background-color: #FFFFFF;
+            color: #000000;
+            padding: 20px;
+            width: 300px;
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            margin: 20px;
+            text-align: left;
+            border-radius: 10px;
+            transition: transform 0.5s ease-out, opacity 0.5s ease-in-out;
+        }
+
+        .tagline {
+            color: #FFD700;
+            font-size: 24px;
+            position: absolute;
+            top: 0;
+            right: 0;
+            transform: translateY(-100%);
+            animation: pulse 2s infinite;
+            white-space: nowrap;
+            z-index: 2;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding-bottom: 100px;
+            }
+
+            .about-section {
+                position: static;
+                margin: 10px auto;
+                transform: translateY(0);
+            }
+
+            .hidden-buttons.show ~ .about-section {
+                transform: translateY(50px);
+            }
+
+            .tagline {
+                top: -40px;
+                right: 50%;
+                transform: translateX(50%) translateY(-100%);
+            }
+        }
+
+        .retro-theme {
+            background-color: #000000;
+            color: #00FF00;
+        }
+
+        .retro-theme .btn {
+            background-color: transparent;
+            color: #00FF00;
+            border: 2px solid #00FF00;
+            font-family: "Courier New", Courier, monospace;
+        }
+
+        .retro-theme #exploreBtn {
+            background-color: #000000;
+            color: white;
+            border: 2px solid white;
+        }
+
+        .retro-theme .background-image {
+            opacity: 0;
+        }
+
+        .retro-theme .about-section {
+            background-color: #000;
+            color: #00FF00;
+            border: 1px solid #00FF00;
+        }
+
+        .retro-theme .container, .retro-theme .about-section, .retro-theme .btn, .retro-theme .tagline {
+            opacity: 1;
+        }
+
+        #themeToggleButton {
+            background-color: transparent;
+            color: rgb(0, 255, 0);
+            border: 2px solid rgb(0, 255, 0);
+            padding: 10px 20px;
+            cursor: pointer;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-family: "Courier New", Courier, monospace;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        #themeToggleButton:hover {
+            background-color: rgba(0, 255, 0, 0.1);
+            color: white;
+        }
+
+        .white-square {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: white;
+            z-index: 9999;
+            animation: squareTransition 0.5s forwards;
+        }
+
+        @keyframes squareTransition {
+            0% { left: 0; }
+            100% { left: 100vw; }
+        }
+
+        .flicker {
+            position: absolute;
+            width: 5px;
+            height: 5px;
+            background-color: white;
+            animation: flicker 0.2s infinite;
+            z-index: 9999;
+        }
+
+        @keyframes flicker {
+            0%, 100% {
+                opacity: 0;
+            }
+            50% {
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
 <body>
-<iframe src="https://www.mgb-yt.com" title="MGB's Site"></iframe>
+    <div class="background-image" id="backgroundImage">
+        <!-- Images will be dynamically added here via JavaScript -->
+    </div>
+    <div class="wrapper">
+        <div class="container">
+            <h1>Welcome to MGB's Website
+                <span class="tagline" id="tagline"></span>
+            </h1>
+            <button class="btn" id="exploreBtn">Explore</button>
+            <div class="hidden-buttons" id="hiddenButtons">
+                <a href="/minecraft"><button class="btn">Minecraft</button></a>
+                <a href="/tools"><button class="btn">Tools and App</button></a>
+                <a href="https://youtube.com/@mgbgame" target="_blank"><button class="btn">YouTube</button></a>
+            </div>
+        </div>
+    </div>
+    <div class="about-section">
+        <h2>Who am I</h2>
+        <p>I am a lazy developer who makes YouTube videos. I enjoy creating content that entertains and educates my audience. My channel covers various topics, including gaming, tech reviews, and tutorials.</p>
+    </div>
+
+    <button id="themeToggleButton">Change Theme</button>
+
+    <script>
+        // Create flickering objects during transition
+        function createFlickeringObjects() {
+            for (let i = 0; i < 20; i++) {
+                const flicker = document.createElement('div');
+                flicker.classList.add('flicker');
+                flicker.style.left = `${Math.random() * window.innerWidth}px`;
+                flicker.style.top = `${Math.random() * window.innerHeight}px`;
+                document.body.appendChild(flicker);
+
+                setTimeout(() => {
+                    flicker.remove();
+                }, 500);
+            }
+        }
+
+        // Create the white square transition
+        function createWhiteSquareTransition() {
+            const whiteSquare = document.createElement('div');
+            whiteSquare.classList.add('white-square');
+            document.body.appendChild(whiteSquare);
+
+            setTimeout(() => {
+                whiteSquare.remove();
+            }, 500);
+        }
+
+        // Toggle the retro theme with dynamic effects
+        document.getElementById('themeToggleButton').addEventListener('click', function() {
+            createWhiteSquareTransition();  // Add white square transition
+            createFlickeringObjects();  // Add flickering effect
+            setTimeout(() => {
+                document.body.classList.toggle('retro-theme');
+            }, 500);  // Apply the retro theme after the animation
+        });
+
+        document.getElementById('exploreBtn').addEventListener('click', function() {
+            var hiddenButtons = document.getElementById('hiddenButtons');
+            if (hiddenButtons.classList.contains('show')) {
+                hiddenButtons.classList.remove('show');
+            } else {
+                hiddenButtons.classList.add('show');
+            }
+        });
+
+        window.onload = function() {
+            // Define the source of the images
+            const imageSources = [
+                'https://lh3.googleusercontent.com/pw/AP1GczOJdLW0TbZ4V2fP6OVBpvNpBz2qac7LBWCUkmRbN9dGAVyOHLY50-z49oC7edIlrX7eq4G5UHpI4Tssr_H26lFyhHogrsKyvdG8zn4tmMYZ6MHeH9Wr2lEL9wuVKa8guJHVBL4lNeu7rfOdAMO_-HW4=w920-h1159-s-no-gm',
+                'https://lh3.googleusercontent.com/pw/AP1GczNGtw5qxTTHkg1PLlHntuFdCCmKlYm6SnOTOipzDjQ4v7TX3tyC5z2NdZ_yIIPDMgUftuybkDZiyMQsFoX4ThKY9vg62m91V07TGcmPIcfJNJAwmy8th6eIkPnz08FS9EJd78R9CcP6V2blux0Jak4w=w1125-h1321-s-no-gm'
+            ];
+
+            const backgroundContainer = document.getElementById('backgroundImage');
+
+            function getRandom(min, max) {
+                return Math.random() * (max - min) + min;
+            }
+
+            function createClones() {
+                imageSources.forEach((src) => {
+                    for (let i = 0; i < 20; i++) {
+                        const imgClone = document.createElement('img');
+                        imgClone.src = src;
+
+                        // Randomize the size (between 100px and 150px)
+                        const randomSize = getRandom(100, 150);
+                        imgClone.style.width = `${randomSize}px`;
+
+                        // Randomize position widely across the screen
+                        const randomLeft = getRandom(0, window.innerWidth - randomSize);
+                        const randomTop = getRandom(0, window.innerHeight - randomSize);
+                        imgClone.style.position = 'absolute';
+                        imgClone.style.left = `${randomLeft}px`;
+                        imgClone.style.top = `${randomTop}px`;
+
+                        // Set the opacity to be dim
+                        imgClone.style.opacity = 0.2;
+
+                        backgroundContainer.appendChild(imgClone);
+                    }
+                });
+            }
+
+            createClones();
+
+            var taglines = [
+                "Innovative Content!",
+                "Latest Tech Reviews!",
+                "Gaming Adventures!",
+                "Coding Tutorials!",
+                "Exciting Vlogs!",
+                "Tech News Updates!",
+                "Gaming Tips & Tricks!",
+                "In-Depth Reviews!",
+                "Learn with Fun!",
+                "Epic Gameplays!"
+            ];
+            var randomTagline = taglines[Math.floor(Math.random() * taglines.length)];
+            document.getElementById('tagline').innerText = randomTagline;
+        };
+    </script>
 </body>
 </html>
