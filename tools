@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Looking for something...</title>
+    <style>
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0;
+            }
+        }
+
+        @keyframes spinIn {
+            from {
+                transform: rotate(-360deg);
+                opacity: 0;
+            }
+            to {
+                transform: rotate(0deg);
+                opacity: 1;
+            }
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #000000;
+            color: #FFFFFF;
+            overflow: hidden;
+            position: relative;
+            flex-direction: column;
+        }
+
+        .container {
+            text-align: center;
+            position: relative;
+            z-index: 1;
+            animation: fadeInUp 1s ease-out;
+            margin-bottom: 50px;
+        }
+
+        .btn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px 20px;
+            margin: 10px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        .btn:hover {
+            transform: scale(1.1);
+        }
+
+        .expandable-btn {
+            background-color: #FF5722;
+            animation: fadeInUp 2s ease-out;
+            animation-delay: 0.5s;
+            animation-fill-mode: both;
+        }
+
+        .hidden-buttons .btn {
+            background-color: #2196F3;
+        }
+
+        .hidden-buttons .btn:nth-child(2) {
+            background-color: #FFC107;
+        }
+
+        .hidden-buttons .btn:nth-child(3) {
+            background-color: #9C27B0;
+        }
+
+        .hidden-buttons {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            opacity: 0;
+            transform: scale(0.8);
+            transition: opacity 0.5s, transform 0.5s, max-height 0.5s;
+            max-height: 0;
+            overflow: hidden;
+        }
+
+        .hidden-buttons.show {
+            opacity: 1;
+            transform: scale(1);
+            max-height: 500px; /* Adjust based on content */
+        }
+
+        .hidden-buttons.show .btn {
+            animation: spinIn 0.5s ease-out;
+        }
+
+        .hidden-buttons a {
+            text-decoration: none;
+        }
+
+        .background-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .background-image img {
+            position: absolute;
+            width: 150px;
+            height: auto;
+            opacity: 0.3;
+        }
+
+        .tagline {
+            color: #FFD700;
+            font-size: 24px;
+            position: absolute;
+            top: 0;
+            right: 0;
+            transform: translateY(-100%);
+            animation: pulse 2s infinite;
+            white-space: nowrap;
+            z-index: 2;
+        }
+
+        @media (max-width: 768px) {
+            .tagline {
+                top: -40px;
+                right: 50%;
+                transform: translateX(50%) translateY(-100%);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="background-image" id="backgroundImage"></div>
+    <div class="container">
+        <h1>Looking for something...
+            <span class="tagline" id="tagline"></span>
+        </h1>
+        <button class="btn expandable-btn" id="entertainBtn">Entertaining</button>
+        <div class="hidden-buttons" id="entertainHiddenButtons">
+            <a href="#"><button class="btn">Minecraft</button></a>
+            <a href="#"><button class="btn">Platformer Game</button></a>
+        </div>
+        <button class="btn expandable-btn" id="toolsBtn">Tools</button>
+        <div class="hidden-buttons" id="toolsHiddenButtons">
+            <a href="#"><button class="btn">Nitro Generator</button></a>
+            <a href="#"><button class="btn">Encode/Decode</button></a>
+        </div>
+        <button class="btn expandable-btn" id="emulatorBtn">Emulator (Fake)</button>
+        <div class="hidden-buttons" id="emulatorHiddenButtons">
+            <a href="#"><button class="btn">Windows 96</button></a>
+            <a href="#"><button class="btn">Windows 93</button></a>
+            <a href="#"><button class="btn">Windows 11</button></a>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('entertainBtn').addEventListener('click', function() {
+            toggleButtons('entertainHiddenButtons');
+        });
+
+        document.getElementById('toolsBtn').addEventListener('click', function() {
+            toggleButtons('toolsHiddenButtons');
+        });
+
+        document.getElementById('emulatorBtn').addEventListener('click', function() {
+            toggleButtons('emulatorHiddenButtons');
+        });
+
+        function toggleButtons(id) {
+            var allHiddenButtons = document.querySelectorAll('.hidden-buttons');
+            allHiddenButtons.forEach(function(buttons) {
+                if (buttons.id !== id) {
+                    buttons.classList.remove('show');
+                }
+            });
+            var hiddenButtons = document.getElementById(id);
+            if (hiddenButtons.classList.contains('show')) {
+                hiddenButtons.classList.remove('show');
+            } else {
+                hiddenButtons.classList.add('show');
+            }
+        }
+
+        function getRandomPosition(element) {
+            var x = Math.floor(Math.random() * (window.innerWidth - element.clientWidth));
+            var y = Math.floor(Math.random() * (window.innerHeight - element.clientHeight));
+            return {x: x, y: y};
+        }
+
+        window.onload = function() {
+            var images = [
+                'https://lh3.googleusercontent.com/pw/AP1GczOJdLW0TbZ4V2fP6OVBpvNpBz2qac7LBWCUkmRbN9dGAVyOHLY50-z49oC7edIlrX7eq4G5UHpI4Tssr_H26lFyhHogrsKyvdG8zn4tmMYZ6MHeH9Wr2lEL9wuVKa8guJHVBL4lNeu7rfOdAMO_-HW4=w920-h1159-s-no-gm',
+                'https://lh3.googleusercontent.com/pw/AP1GczNGtw5qxTTHkg1PLlHntuFdCCmKlYm6SnOTOipzDjQ4v7TX3tyC5z2NdZ_yIIPDMgUftuybkDZiyMQsFoX4ThKY9vg62m91V07TGcmPIcfJNJAwmy8th6eIkPnz08FS9EJd78R9CcP6V2blux0Jak4w=w1125-h1321-s-no-gm'
+            ];
+            var backgroundImage = document.getElementById('backgroundImage');
+            for (var i = 0; i < 10; i++) {
+                var img = document.createElement('img');
+                img.src = images[i % images.length];
+                var pos = getRandomPosition(img);
+                img.style.left = pos.x + 'px';
+                img.style.top = pos.y + 'px';
+                backgroundImage.appendChild(img);
+            }
+
+            var taglines = [
+                "Innovative Content!",
+                "Latest Tech Reviews!",
+                "Gaming Adventures!",
+                "Coding Tutorials!",
+                "Exciting Vlogs!",
+                "Tech News Updates!",
+                "Gaming Tips & Tricks!",
+                "In-Depth Reviews!",
+                "Learn with Fun!",
+                "Epic Gameplays!"
+            ];
+            var randomTagline = taglines[Math.floor(Math.random() * taglines.length)];
+            document.getElementById('tagline').innerText = randomTagline;
+
+            // Define the site name
+            var siteName = "https://www.mgb-yt.com";
+
+            // Construct the full URLs for the links
+            document.querySelector('#entertainHiddenButtons a[href="#"]').href = siteName + '/minecraft';
+            document.querySelector('#entertainHiddenButtons a:nth-child(2)').href = siteName + '/tools/platformer';
+            document.querySelector('#toolsHiddenButtons a[href="#"]').href = siteName + '/tools/nitro';
+            document.querySelector('#toolsHiddenButtons a:nth-child(2)').href = siteName + '/tools/encode-decode';
+            document.querySelector('#emulatorHiddenButtons a[href="#"]').href = 'https://windows96.net';
+            document.querySelector('#emulatorHiddenButtons a:nth-child(2)').href = 'https://windows93.net';
+            document.querySelector('#emulatorHiddenButtons a:nth-child(3)').href = 'https://win11.blueedge.me';
+        };
+    </script>
+</body>
+</html>
